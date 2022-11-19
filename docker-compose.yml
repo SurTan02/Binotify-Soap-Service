@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  binotify-soap-service:
+    build: .
+    image: binotify-soap-service:latest
+    volumes:
+      - ./src:/usr/src/app/src
+    ports:
+      - ${BINOTIFY_SOAP_SERVICE_APP_PORT:-8081}:${BINOTIFY_SOAP_SERVICE_APP_PORT:-8081}
+
+  binotify-soap-service-db:
+    image: mysql:latest
+    restart: always
+    ports:
+      - ${BINOTIFY_SOAP_SERVICE_DB_PORT:-13307}:3307
+    environment:
+      MYSQL_DATABASE: "${BINOTIFY_SOAP_SERVICE_DB_NAME:-database}"
+      MYSQL_USER: "${BINOTIFY_SOAP_SERVICE_DB_USER:-user}"
+      MYSQL_PASSWORD: "${BINOTIFY_SOAP_SERVICE_DB_PASSWORD:-password}"
+      MYSQL_ROOT_PASSWORD: "${BINOTIFY_SOAP_SERVICE_DB_ROOT_PASSWORD:-password}"
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
