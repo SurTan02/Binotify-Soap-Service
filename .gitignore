@@ -1,5 +1,10 @@
 # Compiled class file
+services/target
 *.class
+.idea
+
+# Test file
+services/src/test/java
 
 # Log file
 *.log
