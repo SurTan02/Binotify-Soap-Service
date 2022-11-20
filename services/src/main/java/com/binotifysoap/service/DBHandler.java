@@ -10,8 +10,12 @@ public class DBHandler {
 
     public DBHandler() {
         // Dotenv dotenv = Dotenv.load();
-        System.out.println("MySQL Host: " + "tes");
-        this.DB_URL = "jdbc:mysql://mysql:3307/binotify_service";
+        // System.out.println("MySQL Host: " + "tes");
+
+        // APAAN NI PUSING BRO
+        this.DB_URL = "jdbc:mysql://binotify-soap-service-db:13307/database";
+        // this.DB_URL = "jdbc:mysql://192.168.128.3:13307/database";
+        // this.DB_URL = "jdbc:mysql://0.0.0.0:13307/database";
         try {
             System.out.println("Connecting");
             this.connection = DriverManager.getConnection(DB_URL, DB_Username, DB_Password);
@@ -23,3 +27,6 @@ public class DBHandler {
 
     public Connection getConnection() { return this.connection; }
 }
+
+
+
