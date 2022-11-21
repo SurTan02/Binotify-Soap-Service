@@ -7,12 +7,15 @@ services:
       - ./src:/usr/src/app/src
     ports:
       - ${BINOTIFY_SOAP_SERVICE_APP_PORT:-8081}:${BINOTIFY_SOAP_SERVICE_APP_PORT:-8081}
+    depends_on:
+      binotify-soap-service-db:
+        condition: service_healthy
 
   binotify-soap-service-db:
     image: mysql:latest
     restart: always
     ports:
-      - ${BINOTIFY_SOAP_SERVICE_DB_PORT:-13307}:3307
+      - ${BINOTIFY_SOAP_SERVICE_DB_PORT:-13307}:3306
     environment:
       MYSQL_DATABASE: "${BINOTIFY_SOAP_SERVICE_DB_NAME:-database}"
       MYSQL_USER: "${BINOTIFY_SOAP_SERVICE_DB_USER:-user}"
@@ -20,3 +23,9 @@ services:
       MYSQL_ROOT_PASSWORD: "${BINOTIFY_SOAP_SERVICE_DB_ROOT_PASSWORD:-password}"
     volumes:
       - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s

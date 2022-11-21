@@ -13,7 +13,7 @@ public class DBHandler {
         // System.out.println("MySQL Host: " + "tes");
 
         // APAAN NI PUSING BRO
-        this.DB_URL = "jdbc:mysql://binotify-soap-service-db:13307/database";
+        this.DB_URL = "jdbc:mysql://binotify-soap-service-db:3306/database";
         // this.DB_URL = "jdbc:mysql://192.168.128.3:13307/database";
         // this.DB_URL = "jdbc:mysql://0.0.0.0:13307/database";
         try {
