@@ -7,8 +7,6 @@ import com.binotifysoap.model.Subscription;
 
 import java.sql.*;
 
-
-
 @WebService(endpointInterface = "com.binotifysoap.service.SubscriptionService")
 public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
@@ -45,6 +43,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public ListOfSubscription getSubscription(){
     // public Subscription[] getSubscription(){
+        
         ListOfSubscription arrayOfSubscription = new ListOfSubscription();
         // JSONObject jsonObject = new JSONObject();
         try {
@@ -60,19 +59,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 Subscription instance = new Subscription(rs.getInt("creator_id"),
                                                          rs.getInt("subscriber_id"),
                                                          rs.getString("status"));
-                // arrayOfSubscription[i] = (instance);
                 arrayOfSubscription.addInstance(instance);
-                // JSONObject record = new JSONObject();
-                //Inserting key-value pairs into the json object
-                // record.put("creator_id", rs.getInt("creator_id"));
-                // record.put("subscriber_id", rs.getInt("subscriber_id"));
-                // record.put("status", rs.getString("status"));
-                // array.add(record);
-                // arrayOfSubscription[i] = rs.getString("creator_id");
             }
-            // jsonObject.put("Subscription Data", array);
-            
-            System.out.println("hehehe "+ arrayOfSubscription);
             return arrayOfSubscription;
         } catch (Exception e) {
             // TODO: handle exception
