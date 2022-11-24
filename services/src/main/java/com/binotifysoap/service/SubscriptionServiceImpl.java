@@ -9,7 +9,7 @@ import java.sql.*;
 import javax.jws.WebService;
 
 @WebService(
-    serviceName = "SubsctiptionService",
+    serviceName = "SubscriptionService",
     endpointInterface = "com.binotifysoap.service.SubscriptionService" 
 )
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -51,14 +51,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public ListOfSubscription getSubscription(){
+    public ListOfSubscription getSubscription(int current_page){
     // public Subscription[] getSubscription(){
         
         ListOfSubscription arrayOfSubscription = new ListOfSubscription();
         try {
             Statement statement = conn.createStatement();
-            String sql = "SELECT * FROM subscription";
+            
+            // Count number of subscription
+            String sql = "SELECT COUNT(*) FROM subscription";
             ResultSet rs = statement.executeQuery(sql);
+            
+            rs.next();
+            int total_subscription = rs.getInt("COUNT(*)");
+            arrayOfSubscription.setTotalPages((total_subscription/10) + 1); 
+            arrayOfSubscription.setCurrentPage(current_page);
+            
+            sql = "SELECT * FROM subscription LIMIT 10 OFFSET %d";
+            String formattedSQL = String.format(sql, (current_page-1) * 10 );
+            rs = statement.executeQuery(formattedSQL);
             
             while(rs.next()) {
                 Subscription instance = new Subscription(rs.getInt("creator_id"),
@@ -66,10 +77,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                                                          rs.getString("status"));
                 arrayOfSubscription.addInstance(instance);
             }
-            return arrayOfSubscription;
         } catch (Exception e) {
             // TODO: handle exception
-            return arrayOfSubscription;
+            e.printStackTrace();
         }
+        return arrayOfSubscription;
     }
 }
