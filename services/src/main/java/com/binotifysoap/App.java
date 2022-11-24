@@ -1,8 +1,12 @@
 package com.binotifysoap;
 
-import javax.xml.ws.Endpoint;
+import java.util.List;
 
-// import com.binotifysoap.service.DBHandler;
+import javax.xml.ws.Endpoint;
+import javax.xml.ws.handler.Handler;
+
+import com.binotifysoap.helper.Logging;
+
 import com.binotifysoap.service.SubscriptionServiceImpl;
 
 /**
@@ -13,9 +17,16 @@ public class App
 {
     public static void main( String[] args ){
         try{
-            // Endpoint.publish("http://localhost:8090/com/binotifysoap/SubscriptionService", args)
-            Endpoint.publish("http://0.0.0.0:8081/com/binotifysoap/SubscriptionService", new SubscriptionServiceImpl());
-            // Endpoint.publish("http://localhost:8090/com/binotifysoap/SubscriptionService", new SubscriptionServiceImpl());
+            Endpoint endpoint = Endpoint.create(new SubscriptionServiceImpl());
+
+            List<Handler> handlers = endpoint.getBinding().getHandlerChain();
+
+            handlers.add(new Logging());
+            endpoint.getBinding().setHandlerChain(handlers);
+
+            endpoint.publish("http://0.0.0.0:8081/com/binotifysoap/SubscriptionService");
+            // Endpoint.publish("http://0.0.0.0:8081/com/binotifysoap/SubscriptionService", new SubscriptionServiceImpl());
+
             System.out.println( "Hello Sekai!" );
         }catch (Exception e){
             System.out.println( e.getMessage() );
