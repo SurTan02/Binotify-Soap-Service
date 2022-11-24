@@ -34,7 +34,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
     
     @Override
-    public ListOfSubscription getSubscription() {
+    public String updateSubscription(int creator_id ,  int subscriber_id, String status){
+        try {
+            Statement statement = conn.createStatement();
+            String sql = "UPDATE subscription SET status = ('%s') WHERE creator_id ='%d' AND subscriber_id = '%d'";
+            String formattedSQL = String.format(sql, status, creator_id, subscriber_id);
+            int count = statement.executeUpdate(formattedSQL);
+
+            return "Pengubahan berhasil. Return Value" + count;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error " + e.getMessage();
+            // TODO: handle exception
+        }    
+    }
+
+    @Override
+    public ListOfSubscription getSubscription(){
+    // public Subscription[] getSubscription(){
         
         ListOfSubscription arrayOfSubscription = new ListOfSubscription();
         try {
@@ -51,7 +69,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             return arrayOfSubscription;
         } catch (Exception e) {
             // TODO: handle exception
-            
             return arrayOfSubscription;
         }
     }
