@@ -21,6 +21,15 @@ public interface SubscriptionService {
     @WebResult(name = "Subscriptions")
     // @WebParam(name="<name you want in soap>")
     public String addSubscription(@WebParam(name ="creator_id") int creator_id ,@WebParam(name ="subscriber_id")  int subscriber_id);
+    
+    @WebMethod
+    @WebResult(name = "Subscriptions")
+    // @WebParam(name="<name you want in soap>")
+    public String updateSubscription(@WebParam(name ="creator_id") int creator_id,
+                                     @WebParam(name ="subscriber_id")  int subscriber_id,
+                                     @WebParam(name ="status")  String status);
+
+    
 
     @WebMethod
     @WebResult(name = "Subscriptions")
