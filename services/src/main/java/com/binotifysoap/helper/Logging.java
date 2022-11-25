@@ -44,10 +44,10 @@ public class Logging implements SOAPHandler<SOAPMessageContext> {
         String ip = getIP(context);
         String endpoint = getEndpoint(context);
         String ts = new Timestamp(System.currentTimeMillis()).toString();
+        
+        String query = "INSERT INTO logging (description, IP, endpoint, requested_at) VALUE (?, ?, ?, ?)";
 
-        try {
-            String query = "INSERT INTO logging (description, IP, endpoint, requested_at) VALUE (?, ?, ?, ?)";
-            PreparedStatement statement = conn.prepareStatement(query);
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, desc);
             statement.setString(2, ip);
             statement.setString(3, endpoint);
@@ -57,10 +57,9 @@ public class Logging implements SOAPHandler<SOAPMessageContext> {
 
             if (succsess == 1) System.out.println("[LOG] [" + ts + "] [" + ip + "] [" + endpoint +  "] " + desc);
             else System.out.println("[LOG] Failed to save log!");
-
         } catch (Exception e) {
             // TO DO: Handle Exception
-            e.printStackTrace();
+            System.out.println("[LOG] error: " + e.getMessage());
         }
     }
 
