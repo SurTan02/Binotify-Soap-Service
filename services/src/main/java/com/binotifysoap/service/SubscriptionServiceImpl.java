@@ -18,13 +18,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public String addSubscription(int creator_id, int subscriber_id) {
-        try {
-            Statement statement = conn.createStatement();
-            String sql = "INSERT INTO  subscription (creator_id, subscriber_id) VALUES ('%d', '%d')";
-            String formattedSQL = String.format(sql, creator_id, subscriber_id);
-            int count = statement.executeUpdate(formattedSQL);
+        String query = "INSERT INTO  subscription (creator_id, subscriber_id) VALUES (?, ?)";
+        
+        try (PreparedStatement statement = conn.prepareStatement(query)){
+            statement.setInt(1, creator_id);;
+            statement.setInt(2, subscriber_id);;
+            int count = statement.executeUpdate();
+            // Statement statement = conn.createStatement();
 
-            return "Penambahan berhasil. Return Value" + count;
+            return "Penambahan berhasil. Row added "+ count;
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -35,13 +37,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     @Override
     public String updateSubscription(int creator_id, int subscriber_id, String status) {
-        try {
-            Statement statement = conn.createStatement();
-            String sql = "UPDATE subscription SET status = ('%s') WHERE creator_id ='%d' AND subscriber_id = '%d'";
-            String formattedSQL = String.format(sql, status, creator_id, subscriber_id);
-            int count = statement.executeUpdate(formattedSQL);
-
-            return "Pengubahan berhasil. Return Value" + count;
+        
+        String query = "UPDATE subscription SET status =? WHERE creator_id = ? AND subscriber_id = ?";
+        
+        try (PreparedStatement statement = conn.prepareStatement(query)){
+            statement.setObject(1, status);
+            statement.setInt(2, creator_id);;
+            statement.setInt(3, subscriber_id);;
+            int count = statement.executeUpdate();
+            return "Pengubahan berhasil. Row updated " + count;
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -51,14 +55,27 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public ListOfSubscription getSubscription() {
+    public ListOfSubscription getSubscription(int current_page) {
         
         ListOfSubscription arrayOfSubscription = new ListOfSubscription();
+        String query = "SELECT COUNT(*) FROM subscription";
 
-        try {
-            Statement statement = conn.createStatement();
-            String sql = "SELECT * FROM subscription";
-            ResultSet rs = statement.executeQuery(sql);
+        try{
+            PreparedStatement statement = conn.prepareStatement(query);
+            ResultSet rs = statement.executeQuery(query);
+            
+            rs.next();
+            int total_subscription = rs.getInt("COUNT(*)");
+            arrayOfSubscription.setTotalPages((total_subscription/10) + 1); 
+            arrayOfSubscription.setCurrentPage(current_page);
+            
+            query = "SELECT * FROM subscription LIMIT 10 OFFSET %d";
+            query = String.format(query, (current_page-1) * 10);
+
+            // Hmm pake bind prepared statement gabisa...
+            // statement.setInt(1,  (current_page-1) * 10);
+            statement = conn.prepareStatement(query);
+            rs = statement.executeQuery(query);
             
             while(rs.next()) {
                 Subscription instance = new Subscription(rs.getInt("creator_id"),

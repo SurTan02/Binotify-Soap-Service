@@ -33,5 +33,5 @@ public interface SubscriptionService {
 
     @WebMethod(operationName = "GetSubscription")
     @WebResult(name = "Subscriptions")
-    public ListOfSubscription getSubscription();
+    public ListOfSubscription getSubscription(@WebParam(name ="current_page") int current_page);
 }
