@@ -19,5 +19,16 @@ public class DBHandler {
         }
     }
 
-    public static Connection getConnection() { return connection; }
+    public static Connection getConnection() { 
+        try {
+            if (connection.isClosed()) {
+                connection = DriverManager.getConnection(DB_URL, DB_Username, DB_Password);
+                System.out.println("Database Connected!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return connection; 
+    }
 }
