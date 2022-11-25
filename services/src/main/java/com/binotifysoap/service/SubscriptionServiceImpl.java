@@ -17,7 +17,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     static Connection conn = DBHandler.getConnection();
 
     @Override
-    public String addSubscription(int creator_id, int subscriber_id) {
+    public String addSubscription(int creator_id, int subscriber_id) throws Exception {
+        
         String query = "INSERT INTO  subscription (creator_id, subscriber_id) VALUES (?, ?)";
         
         try (PreparedStatement statement = conn.prepareStatement(query)){
@@ -29,14 +30,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             return "Penambahan berhasil. Row added "+ count;
 
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("[ERROR] " + e.getMessage());
-            return "error " + e.getMessage();
+            throw new Exception(e.getMessage());
         }    
     }
     
     @Override
-    public String updateSubscription(int creator_id, int subscriber_id, String status) {
+    public String updateSubscription(int creator_id, int subscriber_id, String status) throws Exception {
         
         String query = "UPDATE subscription SET status =? WHERE creator_id = ? AND subscriber_id = ?";
         
@@ -48,14 +48,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             return "Pengubahan berhasil. Row updated " + count;
 
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("[ERROR] " + e.getMessage());
-            return "error " + e.getMessage();
+            throw new Exception(e.getMessage());
         }    
     }
 
     @Override
-    public ListOfSubscription getSubscription(int current_page) {
+    public ListOfSubscription getSubscription(int current_page) throws Exception {
         
         ListOfSubscription arrayOfSubscription = new ListOfSubscription();
         String query = "SELECT COUNT(*) FROM subscription";
@@ -85,9 +84,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             }
             return arrayOfSubscription;
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("[ERROR] " + e.getMessage());
-            return arrayOfSubscription;
+            throw new Exception(e.getMessage());
         }
     }
 }
