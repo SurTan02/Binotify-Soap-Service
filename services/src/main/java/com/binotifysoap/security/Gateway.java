@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
@@ -50,6 +51,7 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
         try {
             APIKey = (String) (((LinkedList) ((Map) context.get(MessageContext.HTTP_REQUEST_HEADERS)).get("x-api-key")).getFirst());
         } catch (Exception e) {
+            throwFault(context);
             return false;
         }
 
@@ -65,17 +67,25 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
                 return true;
             }
 
-            System.out.println("[API KEY] Forbidden");
+        } catch (Exception e) {
+            System.out.println("[ERROR] " + e.getMessage());
+        }
 
+        throwFault(context);
+        return false;
+    }
+
+    public void throwFault(SOAPMessageContext context) throws SOAPFaultException {
+        System.out.println("[API KEY] Forbidden");
+
+        try {
             SOAPBody body = context.getMessage().getSOAPBody();
             SOAPFault fault = body.addFault();
             fault.setFaultString("Forbidden");
 
-            throw new SOAPFaultException(fault); 
-
+            throw new SOAPFaultException(fault);
         } catch (Exception e) {
-            System.out.println("[ERROR] " + e.getMessage());
+
         }
-        return false;
     }
 }

@@ -29,8 +29,8 @@ public class App
 
             Endpoint subscriptionEndpoint = Endpoint.create(new SubscriptionServiceImpl());
             List<Handler> subscriptionEndpointHandlers = subscriptionEndpoint.getBinding().getHandlerChain();
-            // subscriptionEndpointHandlers.add(gateway);
             subscriptionEndpointHandlers.add(logger);
+            subscriptionEndpointHandlers.add(gateway);
             subscriptionEndpoint.getBinding().setHandlerChain(subscriptionEndpointHandlers);
             subscriptionEndpoint.publish("http://0.0.0.0:8081/com/binotifysoap/SubscriptionService");
             System.out.println( "Hello Sekai!" );
