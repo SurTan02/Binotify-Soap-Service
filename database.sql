@@ -19,3 +19,9 @@ CREATE TABLE `database`.`logging`
     `requested_at`      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `database`.`api_keys`
+(
+    `client_key`   CHAR(128),
+    PRIMARY KEY (`client_key`)
+);

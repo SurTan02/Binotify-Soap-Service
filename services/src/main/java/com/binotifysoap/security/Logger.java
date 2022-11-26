@@ -1,4 +1,4 @@
-package com.binotifysoap.helper;
+package com.binotifysoap.security;
 
 import java.sql.*;
 import java.util.Set;
@@ -11,7 +11,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import com.binotifysoap.db.DBHandler;
 import com.sun.net.httpserver.*;
 
-public class Logging implements SOAPHandler<SOAPMessageContext> {
+public class Logger implements SOAPHandler<SOAPMessageContext> {
 
     static Connection conn = DBHandler.getConnection();
 
@@ -56,9 +56,9 @@ public class Logging implements SOAPHandler<SOAPMessageContext> {
             statement.setString(3, endpoint);
             statement.setString(4, ts);
 
-            int succsess = statement.executeUpdate();
+            int success = statement.executeUpdate();
 
-            if (succsess == 1) System.out.println("[LOG] [" + ts + "] [" + ip + "] [" + endpoint +  "] " + desc);
+            if (success == 1) System.out.println("[LOG] [" + ts + "] [" + ip + "] [" + endpoint +  "] " + desc);
             else System.out.println("[LOG] Failed to save log!");
         } catch (Exception e) {
             // TO DO: Handle Exception
