@@ -1,12 +1,12 @@
 package com.binotifysoap.db;
 
 import java.sql.*;
+import com.binotifysoap.config.Config;
 
 public class DBHandler {
-
-    private static String DB_URL      = "jdbc:mysql://binotify-soap-service-db:3306/database";
-    private static String DB_Username = "user";
-    private static String DB_Password = "password";
+    private static String DB_URL = Config.getConfig("DB_URL");
+    private static String DB_Username = Config.getConfig("DB_Username");
+    private static String DB_Password = Config.getConfig("DB_Password");
 
     private static Connection connection = null;
     
