@@ -17,14 +17,17 @@ public class Logging implements SOAPHandler<SOAPMessageContext> {
 
     @Override
     public boolean handleMessage(SOAPMessageContext context) {
-        if (!((Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY))) 
-            log(context);
+        if ((Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY))
+            log(context, true);
         
         return true;
     }
 
     @Override
     public boolean handleFault(SOAPMessageContext context) {
+        if ((Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY))
+            log(context, false);
+
         return false;
     }
 
@@ -39,8 +42,8 @@ public class Logging implements SOAPHandler<SOAPMessageContext> {
         return null;
     }
 
-    public void log(SOAPMessageContext context) {
-        String desc = getDescription(context);
+    public void log(SOAPMessageContext context, boolean isSuccess) {
+        String desc = (isSuccess ? "[Success] " : "[Error] ") + getDescription(context);
         String ip = getIP(context);
         String endpoint = getEndpoint(context);
         String ts = new Timestamp(System.currentTimeMillis()).toString();
