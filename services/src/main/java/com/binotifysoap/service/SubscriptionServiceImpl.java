@@ -65,7 +65,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             
             rs.next();
             int total_subscription = rs.getInt("COUNT(*)");
-            arrayOfSubscription.setTotalPages((total_subscription/10) + 1); 
+            arrayOfSubscription.setTotalPages(((total_subscription-1)/10) + 1); 
             arrayOfSubscription.setCurrentPage(current_page);
             
             query = "SELECT * FROM subscription LIMIT 10 OFFSET %d";
