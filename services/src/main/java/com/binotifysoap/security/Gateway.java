@@ -3,13 +3,14 @@ package com.binotifysoap.security;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
@@ -19,6 +20,14 @@ import javax.xml.ws.soap.SOAPFaultException;
 import com.binotifysoap.db.DBHandler;
 
 public class Gateway implements SOAPHandler<SOAPMessageContext> {
+
+    private static Map<String, List<String>> ALLOWED_METHODS;
+    
+    static {
+        ALLOWED_METHODS.put("BINOTIFY REST SERVICE", Arrays.asList("UpdateSubscription", "GetSubscription"));
+        
+        ALLOWED_METHODS.put("BINOTIFY APP",          Arrays.asList("AddSubscription"));
+    }
 
     static Connection conn = DBHandler.getConnection();
     
@@ -55,7 +64,7 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
             return false;
         }
 
-        String query = "SELECT COUNT(*) FROM api_keys WHERE client_key = ?";
+        String query = "SELECT * FROM api_keys WHERE client_key = ? LIMIT 1";
 
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, APIKey);
@@ -63,9 +72,9 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
             ResultSet result = statement.executeQuery();
 
             result.next();
-            if (result.getInt("COUNT(*)") > 0) {
+            if (ALLOWED_METHODS.get(result.getString("client")).contains(getMethod(context))) {
                 return true;
-            }
+            } 
 
         } catch (Exception e) {
             System.out.println("[ERROR] " + e.getMessage());
@@ -73,6 +82,10 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
 
         throwFault(context);
         return false;
+    }
+
+    public String getMethod(SOAPMessageContext context) {
+        return ((QName) context.get(MessageContext.WSDL_OPERATION)).toString().replaceAll("\\{.*?\\}", "");
     }
 
     public void throwFault(SOAPMessageContext context) throws SOAPFaultException {

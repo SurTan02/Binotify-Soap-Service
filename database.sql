@@ -22,6 +22,7 @@ CREATE TABLE `database`.`logging`
 
 CREATE TABLE `database`.`api_keys`
 (
-    `client_key`   CHAR(128),
+    `client`      ENUM('BINOTIFY REST SERVICE', 'BINOTIFY APP') NOT NULL,
+    `client_key`  CHAR(128),
     PRIMARY KEY (`client_key`)
 );

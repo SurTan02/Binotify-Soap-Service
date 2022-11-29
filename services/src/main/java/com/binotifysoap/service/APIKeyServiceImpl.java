@@ -18,17 +18,18 @@ public class APIKeyServiceImpl implements APIKeyService {
     static Connection conn = DBHandler.getConnection();
     
     @Override
-    public String generateAPIKey() throws Exception {
+    public String generateAPIKey(String client) throws Exception {
 
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(128);
 
         String APIKey = DatatypeConverter.printHexBinary(keyGenerator.generateKey().getEncoded()).toLowerCase();
         
-        String query = "INSERT INTO api_keys (client_key) VALUE (?)";
+        String query = "INSERT INTO api_keys (client, client_key) VALUE (?, ?)";
 
         try (PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setString(1, APIKey);
+            statement.setString(1, client);
+            statement.setString(2, APIKey);
 
             int success = statement.executeUpdate();
 
