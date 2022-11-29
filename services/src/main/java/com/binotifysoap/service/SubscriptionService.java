@@ -14,6 +14,7 @@ import com.binotifysoap.model.ListOfSubscription;
 @SOAPBinding(style = Style.DOCUMENT)
 public interface SubscriptionService {
 
+    // PHP
     @WebMethod(operationName = "AddSubscription")
     @WebResult(name = "Subscriptions")
     public String addSubscription(
@@ -24,6 +25,7 @@ public interface SubscriptionService {
         int subscriber_id
     ) throws Exception;
 
+    // REST
     @WebMethod(operationName = "UpdateSubscription")
     @WebResult(name = "Subscriptions")
     // @WebParam(name="<name you want in soap>")
@@ -38,10 +40,19 @@ public interface SubscriptionService {
         String status
     ) throws Exception;
 
+    // REST
     @WebMethod(operationName = "GetSubscription")
     @WebResult(name = "Subscriptions")
     public ListOfSubscription getSubscription(
         @WebParam(name = "current_page")
         int current_page
     ) throws Exception;
+
+    // REST
+    // Validasi Subscription: CHeck apakah creator_id dan subscriber_id ada di database
+
+    // PHP
+    // revalidasi(subscriber_id)
+    //          let data = access database dgn subscriber id  = subscirber_id}
+    //          post(url/php/updateSubscription, body : data) 
 }

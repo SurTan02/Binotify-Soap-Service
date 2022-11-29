@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,16 +22,13 @@ import com.binotifysoap.db.DBHandler;
 
 public class Gateway implements SOAPHandler<SOAPMessageContext> {
 
-    private static Map<String, List<String>> ALLOWED_METHODS;
-    
-    static {
-        ALLOWED_METHODS.put("BINOTIFY REST SERVICE", Arrays.asList("UpdateSubscription", "GetSubscription"));
-        
-        ALLOWED_METHODS.put("BINOTIFY APP",          Arrays.asList("AddSubscription"));
-    }
-
     static Connection conn = DBHandler.getConnection();
-    
+
+    private static Map<String,List<String>> ALLOWED_METHODS = new HashMap<String,List<String>>() {{
+        put("BINOTIFY REST SERVICE", Arrays.asList("UpdateSubscription", "GetSubscription"));
+        put("BINOTIFY APP"         , Arrays.asList("AddSubscription"));
+    }};
+
     @Override
     public boolean handleMessage(SOAPMessageContext context) {
         if (!((Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY)))
@@ -98,7 +96,7 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
 
             throw new SOAPFaultException(fault);
         } catch (Exception e) {
-
+            throw new SOAPFaultException(null);
         }
     }
 }
