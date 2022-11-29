@@ -88,4 +88,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new Exception(e.getMessage());
         }
     }
+    
+    @Override
+    public String validateSubscription(int creator_id,int subscriber_id ) throws Exception{
+        String query = "SELECT status FROM subscription WHERE creator_id = ? AND subscriber_id = ? LIMIT 1";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)){
+            statement.setInt(1, creator_id);;
+            statement.setInt(2, subscriber_id);;
+
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            return (rs.getString("status"));
+        }catch (Exception e) {
+            System.out.println("[ERROR] " + e.getMessage());
+            throw new Exception(e.getMessage());
+        } 
+    }
 }

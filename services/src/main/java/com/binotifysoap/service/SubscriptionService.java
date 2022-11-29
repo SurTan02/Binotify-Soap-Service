@@ -50,6 +50,15 @@ public interface SubscriptionService {
 
     // REST
     // Validasi Subscription: CHeck apakah creator_id dan subscriber_id ada di database
+    @WebMethod(operationName = "ValidateSubscription")
+    @WebResult(name = "Subscriptions")
+    public String validateSubscription(
+        @WebParam(name = "creator_id") 
+        int creator_id,
+
+        @WebParam(name = "subscriber_id")  
+        int subscriber_id
+    ) throws Exception;
 
     // PHP
     // revalidasi(subscriber_id)
