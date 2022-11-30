@@ -5,6 +5,9 @@ import com.binotifysoap.model.ListOfSubscription;
 import com.binotifysoap.model.Subscription;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.jws.WebService;
 
@@ -90,12 +93,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
     
     @Override
-    public String validateSubscription(int creator_id,int subscriber_id ) throws Exception{
+    public String validateSubscription(int creator_id,int subscriber_id ) throws Exception {
         String query = "SELECT status FROM subscription WHERE creator_id = ? AND subscriber_id = ? LIMIT 1";
 
         try (PreparedStatement statement = conn.prepareStatement(query)){
-            statement.setInt(1, creator_id);;
-            statement.setInt(2, subscriber_id);;
+            statement.setInt(1, creator_id);
+            statement.setInt(2, subscriber_id);
 
             ResultSet rs = statement.executeQuery();
             rs.next();
@@ -104,5 +107,65 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             System.out.println("[ERROR] " + e.getMessage());
             throw new Exception(e.getMessage());
         } 
+    }
+
+    @Override
+    public Subscription[] pollSubscriptionsStatus(Subscription[] subscriptions) throws Exception {
+
+        if (subscriptions.length == 0) {
+            throw new Exception("At least 1 item.");
+        }
+
+        int flag = 0;
+
+        while (flag < 10) {
+
+            Arrays.sort(subscriptions);
+
+            List<Subscription> req = new ArrayList<Subscription>(Arrays.asList(subscriptions));
+
+            String query = "SELECT * FROM subscription WHERE ";
+
+            for (int i = 0; i < req.size() - 1; i++) {
+                query += "(creator_id = ? AND subscriber_id = ?) OR ";
+            }
+
+            query += "(creator_id = ? AND subscriber_id = ?) ORDER BY creator_id, subscriber_id";
+
+            try (PreparedStatement statement = conn.prepareStatement(query)) {
+                
+                for (int i = 0; i < req.size(); i++) {
+                    statement.setInt(i * 2 + 1, req.get(i).getCreator_id());
+                    statement.setInt(i * 2 + 2, req.get(i).getSubscriber_id());
+                }
+
+                ResultSet result = statement.executeQuery();
+
+                List<Subscription> tempResult = new ArrayList<Subscription>();
+
+                while (result.next()) {
+                    Subscription s = new Subscription(
+                        result.getInt("creator_id"), 
+                        result.getInt("subscriber_id"), 
+                        result.getString("status"));
+
+                    tempResult.add(s);
+                }
+
+                if (Subscription.same(req, tempResult)) {
+                    Thread.sleep(1000);
+                    flag++;
+                } else {
+                    // TO DO: return only status not "PENDING"
+                    return tempResult.toArray(new Subscription[tempResult.size()]);
+                }
+
+            } catch (Exception e) {
+                System.out.println("[ERROR] " + e.getMessage());
+                throw new Exception(e.getMessage());
+            }
+        }
+    
+        return new Subscription[0];
     }
 }

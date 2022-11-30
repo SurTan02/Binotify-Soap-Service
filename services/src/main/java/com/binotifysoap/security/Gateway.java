@@ -25,7 +25,7 @@ public class Gateway implements SOAPHandler<SOAPMessageContext> {
     static Connection conn = DBHandler.getConnection();
 
     private static Map<String,List<String>> ALLOWED_METHODS = new HashMap<String,List<String>>() {{
-        put("BINOTIFY REST SERVICE", Arrays.asList("UpdateSubscription", "GetSubscription", "ValidateSubscription"));
+        put("BINOTIFY REST SERVICE", Arrays.asList("UpdateSubscription", "GetSubscription", "ValidateSubscription", "CheckSubscriptionsStatus"));
         put("BINOTIFY APP"         , Arrays.asList("AddSubscription"));
     }};
 
