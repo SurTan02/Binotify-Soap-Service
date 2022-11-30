@@ -3,6 +3,7 @@ package com.binotifysoap.service;
 import com.binotifysoap.db.DBHandler;
 import com.binotifysoap.model.ListOfSubscription;
 import com.binotifysoap.model.Subscription;
+import com.binotifysoap.security.Mail;
 
 import java.sql.*;
 
@@ -26,7 +27,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             statement.setInt(2, subscriber_id);;
             int count = statement.executeUpdate();
             // Statement statement = conn.createStatement();
-
+            
+            // String message = String.format("subscriber with id %s want to subscribe to creator with id %s", creator_id, subscriber_id);
+            // System.out.println("Sending Email to Admin");    
+            // Mail.sendEmail("binotify88@gmail.com", "suryanto.tan0@gmail.com",message);
             return "Penambahan berhasil. Row added "+ count;
 
         } catch (Exception e) {

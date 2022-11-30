@@ -31,6 +31,13 @@ public class Config{
 
             String DB_URL  = String.format("jdbc:mysql://%s:%s/%s", DB_HOST, DB_PORT, DB_NAME);
             configurations.put("DB_URL", DB_URL);
+
+            String EMAIL  = getEnv("EMAIL", "suryanto.tan5@gmail.com");
+            configurations.put("EMAIL", EMAIL);
+
+            String EMAIL_PASSWORD  = getEnv("EMAIL_PASSWORD", "suryanto.tan5@gmail.com");
+            configurations.put("EMAIL_PASSWORD", EMAIL_PASSWORD);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
