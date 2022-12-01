@@ -113,7 +113,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Subscription[] pollSubscriptionsStatus(Subscription[] subscriptions) throws Exception {
 
         if (subscriptions.length == 0) {
-            throw new Exception("At least 1 item.");
+            Thread.sleep(5000);
+            return new Subscription[0];
         }
 
         int flag = 0;
