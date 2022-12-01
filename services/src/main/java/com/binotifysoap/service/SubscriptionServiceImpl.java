@@ -4,6 +4,9 @@ import com.binotifysoap.db.DBHandler;
 import com.binotifysoap.model.ListOfSubscription;
 import com.binotifysoap.model.Subscription;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,18 +45,40 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public String updateSubscription(int creator_id, int subscriber_id, String status) throws Exception {
         
         String query = "UPDATE subscription SET status =? WHERE creator_id = ? AND subscriber_id = ?";
-        
+        int count;
+
         try (PreparedStatement statement = conn.prepareStatement(query)){
             statement.setObject(1, status);
             statement.setInt(2, creator_id);;
             statement.setInt(3, subscriber_id);;
-            int count = statement.executeUpdate();
-            return "Pengubahan berhasil. Row updated " + count;
-
+            count = statement.executeUpdate();
+            
         } catch (Exception e) {
             System.out.println("[ERROR] " + e.getMessage());
             throw new Exception(e.getMessage());
-        }    
+        }
+
+        URL url = new URL("http://binotify-app-web:80/app/endpoint/updateStatus.php");
+        HttpURLConnection php_conn = (HttpURLConnection) url.openConnection();
+        String postParams = "creator_id=" + Integer.toString(creator_id) + "&subscriber_id=" + Integer.toString(subscriber_id) + "&status=" + status;
+        php_conn.setRequestMethod("POST");
+
+        php_conn.setDoOutput( true );
+        try ( OutputStream os = php_conn.getOutputStream(); ) {
+            os.write(postParams.getBytes());
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+             System.out.println("[ERROR] " + e.getMessage());
+        }
+
+        int responseCode = php_conn.getResponseCode();
+
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            System.out.println("[ERROR] HTTP Error Code: " + Integer.toString(responseCode));
+        }
+
+        return "Pengubahan berhasil. Row updated " + count;
     }
 
     @Override
