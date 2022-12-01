@@ -28,9 +28,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             int count = statement.executeUpdate();
             // Statement statement = conn.createStatement();
             
-            // String message = String.format("subscriber with id %s want to subscribe to creator with id %s", creator_id, subscriber_id);
-            // System.out.println("Sending Email to Admin");    
-            // Mail.sendEmail("binotify88@gmail.com", "suryanto.tan0@gmail.com",message);
+            String message = String.format("subscriber with id %s want to subscribe to creator with id %s", creator_id, subscriber_id);
+            System.out.println("Sending Email to Admin");    
+            Mail.sendEmail("binotify88@gmail.com", "suryanto.tan0@gmail.com",message);
             return "Penambahan berhasil. Row added "+ count;
 
         } catch (Exception e) {

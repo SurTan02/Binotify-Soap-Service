@@ -13,11 +13,11 @@ import com.binotifysoap.config.Config;
 
 public class Mail {
 
-    // public static String SENDER = Config.getConfig("EMAIL");
-    // public static String PASSWORD = Config.getConfig("EMAIL_PASSWORD");
+    public static String SENDER = Config.getConfig("EMAIL");
+    public static String PASSWORD = Config.getConfig("EMAIL_PASSWORD");
     
-    public static String SENDER = "976db0a9e68ec7";
-    public static String PASSWORD = "f08696f3955d3a";
+    // public static String SENDER = "976db0a9e68ec7";
+    // public static String PASSWORD = "f08696f3955d3a";
 
     /** MAGER GAN hrusnya array :v
      * @param receiver
