@@ -9,6 +9,7 @@ import javax.jws.soap.SOAPBinding.Style;
 
 
 import com.binotifysoap.model.ListOfSubscription;
+import com.binotifysoap.model.Subscription;
 
 @WebService
 @SOAPBinding(style = Style.DOCUMENT)
@@ -63,5 +64,17 @@ public interface SubscriptionService {
     // PHP
     // revalidasi(subscriber_id)
     //          let data = access database dgn subscriber id  = subscirber_id}
-    //          post(url/php/updateSubscription, body : data) 
+    //          post(url/php/updateSubscription, body : data)
+
+    @WebMethod(operationName = "PollSubscriptionsStatus")
+    @WebResult(name = "Subscriptions")
+    public Subscription[] pollSubscriptionsStatus(
+        @WebParam(name = "Subscriptions")
+        Subscription[] subscriptions
+    ) throws Exception;
+
+    // @WebMethod(operationName = "CreateSubscription")
+    // public Subscription createSubscription(
+    //     @WebParam
+    // )
 }
