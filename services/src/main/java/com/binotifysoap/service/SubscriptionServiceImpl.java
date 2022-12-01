@@ -4,9 +4,6 @@ import com.binotifysoap.db.DBHandler;
 import com.binotifysoap.model.ListOfSubscription;
 import com.binotifysoap.model.Subscription;
 import com.binotifysoap.security.Mail;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,37 +32,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             statement.setInt(1, creator_id);;
             statement.setInt(2, subscriber_id);;
             count = statement.executeUpdate();
-            // Statement statement = conn.createStatement();
-            
-            // String message = String.format("subscriber with id %s want to subscribe to creator with id %s", creator_id, subscriber_id);
-            // System.out.println("Sending Email to Admin");    
-            // Mail.sendEmail("binotify88@gmail.com", "suryanto.tan0@gmail.com",message);
-
-        } catch (Exception e) {
-            System.out.println("[ERROR] " + e.getMessage());
-            throw new Exception(e.getMessage());
         }
-
-        URL url = new URL("http://binotify-rest-service-app:8080/admin");
-        HttpURLConnection rest_conn = (HttpURLConnection) url.openConnection();
-        rest_conn.setRequestMethod("GET");
-        int responseCode = rest_conn.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(rest_conn.getInputStream()));) {
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-
-                System.out.println(response.toString());
-            }
-        } else {
-            System.out.println("[ERROR] HTTP Error Code: " + Integer.toString(responseCode));
-        }
-
+        String message = String.format("subscriber with id %s want to subscribe to creator with id %s",subscriber_id, creator_id);
+        Mail.sendEmail(message);
         return "Penambahan berhasil. Row added " + count;
     }
     

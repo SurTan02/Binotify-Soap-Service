@@ -13,6 +13,13 @@ public class Config{
             // APP PORT
             String APP_PORT = getEnv("BINOTIFY_SOAP_SERVICE_APP_PORT", "8081");
             configurations.put("APP_PORT", APP_PORT);
+            
+            
+            String REST_PORT = getEnv("BINOTIFY_REST_SERVICE_PORT", "8080");
+            configurations.put("REST_PORT", REST_PORT);
+            
+            String REST_HOST = getEnv("BINOTIFY_REST_SERVICE_HOST", "binotify-rest-service-app");
+            configurations.put("REST_HOST", REST_HOST);
 
             String DB_HOST = getEnv("BINOTIFY_SOAP_SERVICE_DB_HOST", "binotify-soap-service-db");
             configurations.put("DB_HOST", DB_HOST);
