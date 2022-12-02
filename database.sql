@@ -26,3 +26,15 @@ CREATE TABLE `database`.`api_keys`
     `client_key`  CHAR(128),
     PRIMARY KEY (`client_key`)
 );
+
+INSERT INTO `database`.`subscription` values (1, 1, 'ACCEPTED');
+
+INSERT INTO `database`.`subscription` values (2, 1, 'PENDING');
+
+INSERT INTO `database`.`subscription` values (3, 1, 'REJECTED');
+
+INSERT INTO `database`.`subscription` values (4, 1, 'ACCEPTED');
+
+INSERT INTO `database`.`subscription` values (5, 1, 'PENDING');
+
+INSERT INTO `database`.`subscription` values (6, 1, 'REJECTED');
