@@ -27,9 +27,9 @@ CREATE TABLE `database`.`api_keys`
     PRIMARY KEY (`client_key`)
 );
 
-INSERT INTO `database`.`subscription` values (1, 2, 'ACCEPTED');
-INSERT INTO `database`.`subscription` values (2, 2, 'PENDING');
-INSERT INTO `database`.`subscription` values (3, 3, 'REJECTED');
-INSERT INTO `database`.`subscription` values (4, 2, 'ACCEPTED');
-INSERT INTO `database`.`subscription` values (5, 2, 'PENDING');
-INSERT INTO `database`.`subscription` values (6, 2, 'REJECTED');
+-- INSERT INTO `database`.`subscription` values (1, 2, 'ACCEPTED');
+-- INSERT INTO `database`.`subscription` values (2, 2, 'PENDING');
+-- INSERT INTO `database`.`subscription` values (3, 3, 'REJECTED');
+-- INSERT INTO `database`.`subscription` values (4, 2, 'ACCEPTED');
+-- INSERT INTO `database`.`subscription` values (5, 2, 'PENDING');
+-- INSERT INTO `database`.`subscription` values (6, 2, 'REJECTED');
