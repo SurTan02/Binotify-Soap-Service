@@ -147,7 +147,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             List<Subscription> req = new ArrayList<Subscription>(Arrays.asList(subscriptions));
 
-            String query = "SELECT * FROM subscription WHERE ";
+            String query = "SELECT * FROM subscription WHERE status != 'PENDING' AND ";
 
             for (int i = 0; i < req.size() - 1; i++) {
                 query += "(creator_id = ? AND subscriber_id = ?) OR ";
@@ -175,11 +175,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     tempResult.add(s);
                 }
 
-                if (Subscription.same(req, tempResult)) {
+                // if (Subscription.same(req, tempResult)) {
+                //     Thread.sleep(1000);
+                //     flag++;
+                // } else {
+                //     // TO DO: return only status not "PENDING"
+                //     return tempResult.toArray(new Subscription[tempResult.size()]);
+                // }
+
+                if (tempResult.size() == 0) {
                     Thread.sleep(1000);
                     flag++;
                 } else {
-                    // TO DO: return only status not "PENDING"
                     return tempResult.toArray(new Subscription[tempResult.size()]);
                 }
 
